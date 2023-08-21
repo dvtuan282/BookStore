@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{TrangChu}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>FORM SÁCH</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">FORM SÁCH</h1>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <form th:action="@{${action}}" th:object="${sach}" method="post"
+                  enctype="multipart/form-data">
+                <div class="card-header py-3">
+                    <button type="submit" class="btn btn-primary" data-toggle="modal"
+                            data-target="#formModal">Submit
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="controller">
+                        <!-- body1 -->
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="row" style="width: 100%; height: 350px; border-style: dotted;">
+                                    <img id="output_image" src="" alt="">
+                                </div>
+                                <hr>
+                                <div class="row" style="width: 100%;">
+                                    <input type="file" name="file"
+                                           th:value="${sach.anh}"
+                                           th:onchange="preview_image(event)"
+                                           class="form-control">
+                                </div>
+                                <hr>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" checked
+                                           value="0" th:field="*{trangThai}">
+                                    <label class="form-check-label">Còn hàng</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio"
+                                           th:field="*{trangThai}" value="1">
+                                    <label class="form-check-label">Hết hàng</label>
+                                </div>
+
+                            </div>
+                            <div class="col-7">
+                                <div class="mb-3">
+                                    <label class="form-label">Danh mục</label>
+                                    <select th:field="*{danhMuc}" class="form-select"
+                                            aria-label="select example">
+                                        <option th:each="dm: ${dm}"
+                                                th:text="${dm.tenDanhMuc}"
+                                                th:value="${dm.id}"
+                                        >
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Tác giả</label>
+                                    <select th:field="*{tacGia}" class="form-select"
+                                            aria-label="Default select example">
+                                        <option th:each="tg: ${tg}" th:text="${tg.tenTacGia}"
+                                                th:value="${tg.id}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Nhà xuất bản</label>
+                                    <select th:field="*{nhaXuatBan}" class="form-select"
+                                            aria-label="Default select example">
+                                        <option th:each="nxb: ${nxb}"
+                                                th:text="${nxb.tenNhaXuatBan}"
+                                                th:value="${nxb.id}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="row g-3">
+                                        <div class="col">
+                                            <input th:field="*{tenSach}" type="text" class="form-control"
+                                                   placeholder="Tên Sách"
+                                                   aria-label="Tên Sách">
+                                            <div id="emailHelp" class="form-text" style="color: red"
+                                                 th:if="${#fields.hasErrors('tenSach')}"
+                                                 th:errors="*{tenSach}"></div>
+                                        </div>
+                                        <div class="col">
+                                            <input th:field="*{ngayXuatBan}" type="date" class="form-control"
+                                                   placeholder="Ngày xuất bản"
+                                                   aria-label="Ngày xuất bản">
+                                            <div id="emailHelp" class="form-text" style="color: red"
+                                                 th:if="${#fields.hasErrors('ngayXuatBan')}"
+                                                 th:errors="*{ngayXuatBan}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="row g-3">
+                                        <div class="col">
+                                            <input th:field="*{soLuong}"
+                                                   type="number" class="form-control" placeholder="Số lượng"
+                                                   aria-label="Số lượng">
+                                            <div id="emailHelp" class="form-text" style="color: red"
+                                                 th:if="${#fields.hasErrors('soLuong')}"
+                                                 th:errors="*{soLuong}"></div>
+                                        </div>
+                                        <div class="col">
+                                            <input th:field="*{giaTien}"
+                                                   type="number" class="form-control" placeholder="Giá tiền"
+                                                   aria-label="Giá tiền">
+                                            <div id="emailHelp" class="form-text" style="color: red"
+                                                 th:if="${#fields.hasErrors('giaTien')}"
+                                                 th:errors="*{giaTien}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-floating">
+                                                <textarea th:field="*{moTa}" class="form-control"
+                                                          placeholder="Leave a comment here"
+                                                          id="floatingTextarea2" style="height: 100px"></textarea>
+                                        <label for="floatingTextarea2">Mô tả</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

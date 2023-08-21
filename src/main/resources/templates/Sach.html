@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{TrangChu}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>SÁCH</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">QUẢN LÝ SÁCH</h1>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-6">
+                        <a th:href="@{/K-Book/admin/sach/form}" class="btn btn-primary">Thêm mới</a>
+
+                    </div>
+                    <div class="col-6 nav justify-content-end ">
+                        <form th:action="@{/K-Book/admin/sach}" class="d-flex">
+                            <input class="form-control me-2" name="name" type="text" placeholder="Search">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>Tên sách</th>
+                            <th>Tác giả</th>
+                            <th>Nhà xuất bản</th>
+                            <th>Danh mục</th>
+                            <th>Giá tiền</th>
+                            <th>Số lượng</th>
+                            <th>Trạng thái</th>
+                            <th>Chức năng</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>Tên sách</th>
+                            <th>Tác giả</th>
+                            <th>Nhà xuất bản</th>
+                            <th>Danh mục</th>
+                            <th>Giá tiền</th>
+                            <th>Số lượng</th>
+                            <th>Trạng thái</th>
+                            <th>Chức năng</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        <tr th:each="sach : ${listSach}">
+                            <td>
+                                <img th:src="@{'/fileUpload/'+${sach.anh}}" style="width: 100px; height: 100px">
+                            </td>
+                            <td th:text="${sach.tenSach}"></td>
+                            <td th:text="${sach.tacGia.tenTacGia}"></td>
+                            <td th:text="${sach.nhaXuatBan.tenNhaXuatBan}"></td>
+                            <td th:text="${sach.danhMuc.tenDanhMuc}"></td>
+                            <td th:text="${sach.GiaTien}"></td>
+                            <td th:text="${sach.soLuong}"></td>
+                            <td th:text="${sach.trangThai==0?'Còn hàng':'Hết hàng'}"></td>
+                            <td>
+                                <a class="delete" th:href="@{/K-Book/admin/sach/xoa/{id}(id=${sach.id})}">
+                                    <i class="material-icons" title="Delete">&#xE872;</i>
+                                </a>
+                                <a th:href="@{/K-Book/admin/sach/{id}(id=${sach.id})}" class="edit">
+                                    <i class="material-icons" title="Edit">&#xE254;</i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-6" th:text="'Items: ' + ${totalItems}"></div>
+                    <div class="col-6">
+                        <nav aria-label="Page navigation example ">
+                            <ul class="pagination justify-content-end">
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li th:each="pageNumber: ${#numbers.sequence(1, totalPage)}" class="page-item">
+                                    <a class="page-link"
+                                       th:text="${pageNumber}"
+                                       th:if="${name != null and name != ''}"
+                                       th:href="@{'/K-Book/admin/sach?name=' + ${name} +'&pageNumber='+${pageNumber}}"></a>
+                                    <a class="page-link"
+                                       th:text="${pageNumber}"
+                                       th:unless="${name != null and name != ''}"
+                                       th:href="@{'/K-Book/admin/sach?pageNumber='+${pageNumber}}"></a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

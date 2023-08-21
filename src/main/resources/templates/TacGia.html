@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{TrangChu}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Tác giả</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div ng-app="tacGia" ng-controller="tacGia-ctrl" class="container-fluid">
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">QUẢN LÝ TÁC GIẢ</h1>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#themTacGia">Thêm mới
+                        </button>
+                    </div>
+                    <div class="col-6 nav justify-content-end ">
+                        <form th:action="@{/K-Book/admin/tac-gia}" class="d-flex">
+                            <input class="form-control me-2" name="name" type="text" placeholder="Search">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên tác giả</th>
+                            <th>Chức năng</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên tác giả</th>
+                            <th>Chức năng</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        <tr th:each="tg: ${listTG}">
+                            <td th:text="${tg.id}"></td>
+                            <td th:text="${tg.tenTacGia}"></td>
+                            <td>
+                                <a class="delete" th:href="@{/K-Book/admin/tac-gia/xoa/{id}(id=${tg.id})}">
+                                    <i class="material-icons" title="Delete">&#xE872;</i>
+                                </a>
+                                <a href="" class="edit" data-toggle="modal" data-target="#suaTacGia"
+                                   th:attr="ng-click='findById(\''+${tg.id}+'\');'">
+                                    <i class="material-icons" title="Edit">&#xE254;</i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-6" th:text="'Items: ' + ${totalItems}"></div>
+                    <div class="col-6">
+                        <nav aria-label="Page navigation example ">
+                            <ul class="pagination justify-content-end">
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li th:each="pageNumber: ${#numbers.sequence(1, totalPage)}" class="page-item">
+                                    <a class="page-link"
+                                       th:text="${pageNumber}"
+                                       th:if="${name != null and name != ''}"
+                                       th:href="@{'/K-Book/admin/tac-gia?name=' + ${name} +'&pageNumber='+${pageNumber}}"></a>
+                                    <a class="page-link"
+                                       th:text="${pageNumber}"
+                                       th:unless="${name != null and name != ''}"
+                                       th:href="@{'/K-Book/admin/tac-gia?pageNumber='+${pageNumber}}"></a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Them tác giả-->
+        <div class="modal" id="themTacGia">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Thêm tác giả</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <!-- Modal body -->
+                    <form method="post" th:action="@{/K-Book/admin/tac-gia/them}" th:object="${tacGia}">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Tên tác giả</label>
+                                <input th:field="*{tenTacGia}" type="text" class="form-control">
+                                <!--                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
+                            </div>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--    sua tac gia-->
+        <div class="modal" id="suaTacGia">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Sửa tác giả</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">ID</label>
+                            <input type="text" ng-model="id" class="form-control">
+                            <!--                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tên danh mục</label>
+                            <input type="text" ng-model="tenTacGia" class="form-control">
+                            <!--                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" ng-click="update(id)" class="btn btn-primary">Submit</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

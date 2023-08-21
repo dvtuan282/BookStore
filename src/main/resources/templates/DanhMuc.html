@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{TrangChu}">
+<head>
+    <title>Danh Mục</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="container-fluid" ng-app="danhMuc" ng-controller="danhMuc-ctrl">
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">QUẢN LÝ DANH MỤC</h1>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#themDanhMuc">Thêm mới
+                        </button>
+                    </div>
+                    <div class="col-6 nav justify-content-end ">
+                        <form th:action="@{/K-Book/admin/danh-muc}" class="d-flex">
+                            <input class="form-control me-2" name="name" type="text" placeholder="Search">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên danh mục</th>
+                            <th>Chức năng</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên danh mục</th>
+                            <th>Chức năng</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        <tr th:each="dm: ${listDM}">
+                            <td th:text="${dm.id}"></td>
+                            <td th:text="${dm.tenDanhMuc}"></td>
+                            <td>
+                                <a class="delete" th:href="@{/K-Book/admin/danh-muc/xoa/{id}(id=${dm.id})}">
+                                    <i class="material-icons" title="Delete">&#xE872;</i>
+                                </a>
+                                <a href="" class="edit" data-toggle="modal" data-target="#suaDanhMuc"
+                                   th:attr="ng-click='findByIdDM(\''+${dm.id}+'\');'">
+                                    <i class="material-icons" title="Edit">&#xE254;</i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-6" th:text="'Tổng item: ' + ${totalItems}"></div>
+                    <div class="col-6">
+                        <nav aria-label="Page navigation example ">
+                            <ul class="pagination justify-content-end">
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li th:each="pageNumber: ${#numbers.sequence(1, totalPage)}" class="page-item">
+                                    <a class="page-link"
+                                       th:text="${pageNumber}"
+                                       th:if="${name != null and name != ''}"
+                                       th:href="@{'/K-Book/admin/danh-muc?name=' + ${name} +'&pageNumber='+${pageNumber}}"></a>
+                                    <a class="page-link"
+                                       th:text="${pageNumber}"
+                                       th:unless="${name != null and name != ''}"
+                                       th:href="@{'/K-Book/admin/danh-muc?pageNumber='+${pageNumber}}"></a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- The Modal -->
+        <div class="modal" id="themDanhMuc">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Thêm danh mục</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <form method="post" th:action="@{/K-Book/admin/danh-muc/them}" th:object="${danhMuc}">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Tên danh mục</label>
+                                <input th:field="*{tenDanhMuc}" type="text" class="form-control">
+                                <!--                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
+                            </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--    sua danh muc-->
+        <div class="modal" id="suaDanhMuc">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Sửa danh mục</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">ID</label>
+                            <input type="text" ng-model="id" class="form-control">
+<!--                                                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tên danh mục</label>
+                            <input type="text" ng-model="tenDanhMuc" class="form-control">
+                            <!--                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" ng-click="updateDM(id)" class="btn btn-primary">Submit</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

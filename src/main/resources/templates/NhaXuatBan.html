@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{TrangChu}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Nhà xuất bản</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid" ng-app="nxb" ng-controller="nxb-ctrl">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">QUẢN LÝ NHÀ XUẤT BẢN</h1>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#them">Thêm mới
+                        </button>
+                    </div>
+                    <div class="col-6 nav justify-content-end ">
+                        <form th:action="@{/K-Book/admin/nha-xuat-ban}" class="d-flex">
+                            <input class="form-control me-2" name="name" type="text" placeholder="Search">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên nhà xuất bản</th>
+                            <th>Chức năng</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên nhà xuất bản</th>
+                            <th>Chức năng</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        <tr th:each="nxb: ${listNXB}">
+                            <td th:text="${nxb.id}"></td>
+                            <td th:text="${nxb.tenNhaXuatBan}"></td>
+                            <td>
+                                <a class="delete" th:href="@{/K-Book/admin/nha-xuat-ban/xoa/{id}(id=${nxb.id})}">
+                                    <i class="material-icons" title="Delete">&#xE872;</i>
+                                </a>
+                                <a href="" class="edit" data-toggle="modal" data-target="#sua"
+                                   th:attr="ng-click='findById(\''+${nxb.id}+'\');'">
+                                    <i class="material-icons" title="Edit">&#xE254;</i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-6" th:text="'Items: ' + ${totalItems}"></div>
+                    <div class="col-6">
+                        <nav aria-label="Page navigation example ">
+                            <ul class="pagination justify-content-end">
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li th:each="pageNumber: ${#numbers.sequence(1, totalPage)}" class="page-item">
+                                    <a class="page-link"
+                                       th:text="${pageNumber}"
+                                       th:if="${name != null and name != ''}"
+                                       th:href="@{'/K-Book/admin/nha-xuat-ban?name=' + ${name} +'&pageNumber='+${pageNumber}}"></a>
+                                    <a class="page-link"
+                                       th:text="${pageNumber}"
+                                       th:unless="${name != null and name != ''}"
+                                       th:href="@{'/K-Book/admin/nha-xuat-ban?pageNumber='+${pageNumber}}"></a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--    them NXB-->
+        <div class="modal" id="them">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Thêm nhà xuất bản</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <form th:action="@{/K-Book/admin/nha-xuat-ban/them}" th:object="${nxb}" method="post">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Tên nhà xuất bản</label>
+                                <input type="text" class="form-control" th:field="*{tenNhaXuatBan}">
+                                <!--                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
+                            </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--    Sửa NXB-->
+        <div class="modal" id="sua">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Sửa nhà xuất bản</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <form>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">ID</label>
+                                <input type="text" ng-model="id" class="form-control">
+                                <!--                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tên nhà xuất bản</label>
+                                <input type="text" ng-model="tenNXB" class="form-control">
+                                <!--                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
+                            </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" ng-click="update(id)" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
