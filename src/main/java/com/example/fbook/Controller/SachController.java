@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("K-Book/admin/sach")
+@RequestMapping("/K-Book/admin/sach")
 public class SachController {
     @Value("${upload.path}")
     private String pathFolder;
